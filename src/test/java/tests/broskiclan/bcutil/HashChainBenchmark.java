@@ -90,14 +90,14 @@ public class HashChainBenchmark {
 			System.out.println(hashChainBlock.toJson());
 			System.out.println("----------------------------------------------------");
 		}
+		Files.delete(Paths.get("hashTest"));
 		System.out.println("Benchmarks completed ======================\n" +
 				"Stored in " + s.getTime(TimeUnit.MILLISECONDS) + "ms" + "\n" +
 				"Loaded in " + s2.getTime(TimeUnit.MILLISECONDS) + "ms");
 	}
 
-	public void cleanUp() throws IOException {
+	public void cleanUp() {
 		chain = null;
-		Files.delete(Paths.get("hashTest"));
 		System.gc();
 	}
 
