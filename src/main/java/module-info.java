@@ -19,9 +19,9 @@ module org.broskiclan.bcryptutils {
 
 	requires static lombok;
 	requires static java.desktop;
+	requires com.google.gson;
 	requires org.jetbrains.annotations;
 	requires org.apache.commons.codec;
 	requires org.apache.commons.lang3;
-	requires org.apache.commons.io;
 
 }

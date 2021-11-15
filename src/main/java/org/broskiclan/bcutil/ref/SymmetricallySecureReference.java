@@ -1,5 +1,6 @@
 package org.broskiclan.bcutil.ref;
 
+import com.google.gson.JsonSyntaxException;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.SerializationException;
@@ -15,6 +16,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import java.io.InvalidObjectException;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.AlgorithmParameterSpec;
 
@@ -99,8 +101,8 @@ public final class SymmetricallySecureReference<T extends Serializable> extends 
 		try {
 			cipher.init(Cipher.DECRYPT_MODE, key);
 			byte[] result = cipher.doFinal(data);
-			return InternalSerializationUtils.deserialize(result, tClass);
-		} catch(SerializationException | IllegalBlockSizeException | BadPaddingException e) {
+			return InternalSerializationUtils.deserialize(new String(result, StandardCharsets.ISO_8859_1), tClass);
+		} catch(JsonSyntaxException | IllegalBlockSizeException | BadPaddingException e) {
 			var e1 = new InvalidObjectException("Unable to find object during decryption");
 			e1.initCause(e);
 			throw e1;

@@ -1,10 +1,11 @@
 package org.broskiclan.bcutil.internal;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.SneakyThrows;
-import org.apache.commons.io.serialization.ValidatingObjectInputStream;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.ByteArrayInputStream;
+import java.lang.reflect.Type;
 
 /**
  * Internal utilities for the secure
@@ -14,21 +15,28 @@ import java.io.ByteArrayInputStream;
  */
 public final class InternalSerializationUtils {
 
+	private static final Gson gson = new GsonBuilder().registerTypeHierarchyAdapter(byte[].class, new ByteArraySerializationAdapter()).create();
+
 	/**
-	 * Deserializes an object using a secure
-	 * {@link org.apache.commons.io.serialization.ValidatingObjectInputStream ObjectInputStream}.
-	 * @param bytes The bytes to deserialize from
+	 * Deserializes an object from JSON.
+	 * @param s the string to deserialize from.
+	 * @param clazz the class to deserialize into.
 	 * @return the deserialized object.
 	 */
-	@SuppressWarnings("unchecked")
 	@SneakyThrows
-	public static <T> T deserialize(byte @NotNull [] bytes, Class<?>... permittedClasses) {
-		try(ValidatingObjectInputStream objectInputStream = new ValidatingObjectInputStream(
-				new ByteArrayInputStream(bytes)
-		)) {
-			objectInputStream.accept(permittedClasses);
-			return (T) objectInputStream.readObject();
-		}
+	public static <T> T deserialize(@NotNull String s, Class<T> clazz) {
+		return gson.fromJson(s, (Type) clazz);
+	}
+
+	/**
+	 * Serializes an object into JSON.
+	 * @param <T> the type of the object.
+	 * @param t the object to serialize into JSON.
+	 * @return a JSON string containing the object data.
+	 */
+	@SneakyThrows
+	public static <T> String serialize(@NotNull T t) {
+		return gson.toJson(t, t.getClass());
 	}
 
 	private InternalSerializationUtils() {}

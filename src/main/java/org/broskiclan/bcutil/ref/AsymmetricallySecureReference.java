@@ -1,5 +1,6 @@
 package org.broskiclan.bcutil.ref;
 
+import com.google.gson.JsonSyntaxException;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.SerializationException;
@@ -13,6 +14,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import java.io.InvalidObjectException;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
@@ -103,8 +105,8 @@ public class AsymmetricallySecureReference<T extends Serializable> extends Secur
 			if(!isEncrypted) throw new IllegalStateException();
 			cipher.init(Cipher.DECRYPT_MODE, key);
 			byte[] b = cipher.doFinal(rawData);
-			return InternalSerializationUtils.deserialize(b, tClass);
-		} catch(SerializationException | IllegalBlockSizeException | BadPaddingException e) {
+			return InternalSerializationUtils.deserialize(new String(b, StandardCharsets.ISO_8859_1), tClass);
+		} catch(JsonSyntaxException | IllegalBlockSizeException | BadPaddingException e) {
 			var e1 = new InvalidObjectException("Unable to find object");
 			e1.initCause(e);
 			throw e1;
@@ -125,7 +127,7 @@ public class AsymmetricallySecureReference<T extends Serializable> extends Secur
 		KeyPair kp = keyPairGenerator.generateKeyPair();
 		if(cipherSpec == null) cipher.init(Cipher.ENCRYPT_MODE, kp.getPublic());
 		else cipher.init(Cipher.ENCRYPT_MODE, kp.getPublic(), cipherSpec);
-		rawData = cipher.doFinal(SerializationUtils.serialize(temp));
+		rawData = cipher.doFinal(InternalSerializationUtils.serialize(temp).getBytes(StandardCharsets.ISO_8859_1));
 		this.temp = null;
 		isEncrypted = true;
 		return kp.getPrivate();
@@ -143,7 +145,7 @@ public class AsymmetricallySecureReference<T extends Serializable> extends Secur
 		if(isEncrypted) throw new IllegalStateException();
 		KeyPair kp = keyPairGenerator.generateKeyPair();
 		cipher.init(Cipher.ENCRYPT_MODE, kp.getPublic());
-		rawData = cipher.doFinal(SerializationUtils.serialize(temp));
+		rawData = cipher.doFinal(InternalSerializationUtils.serialize(temp).getBytes(StandardCharsets.ISO_8859_1));
 		this.temp = null;
 		isEncrypted = true;
 		return kp.getPrivate();
