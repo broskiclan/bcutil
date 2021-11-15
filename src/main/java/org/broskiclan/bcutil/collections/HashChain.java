@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.Serial;
 import java.io.Serializable;
 import java.security.MessageDigest;
 import java.util.*;
@@ -31,6 +32,7 @@ public class HashChain<E> implements
 						  Trimmable<HashChain<E>> {
 
 	private final boolean initWithNullBlock;
+	@Serial private static final long serialVersionUID = -6009066883054574968L;
 	@Getter(AccessLevel.PROTECTED) private final MessageDigest digest;
 	@Getter(AccessLevel.PACKAGE) private int structuralModificationCount = 0;
 	private final int arrayIncrement;
@@ -152,7 +154,7 @@ public class HashChain<E> implements
 	}
 
 	/**
-	 * This method validates the {@link HashChain}'s integrity by getting previous hashes.
+	 * This method validates the {@link HashChain}'s integrity by getting previous digest.
 	 * @return Whether the chain is valid.
 	 */
 	public synchronized boolean validate() {

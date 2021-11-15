@@ -25,7 +25,7 @@ import java.security.spec.AlgorithmParameterSpec;
  */
 // ignore this complicated warning that I am too lazy to figure out
 @SuppressWarnings("scwbasic-protection-set_DataProtection-CryptographyAvoidcryptographicweaknessUseappropriatesecretkeygenerationalgorithmOtheralgorithms")
-public final class SymmetricallySecureReference<T extends Serializable> extends SecureReference<T> implements Serializable {
+public final class SymmetricallySecureReference<T extends Serializable> extends SecureReference<T> {
 
 	private transient final KeyGenerator keyGenerator;
 	private transient final Cipher cipher;

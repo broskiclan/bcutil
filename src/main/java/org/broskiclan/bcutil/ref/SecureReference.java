@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.crypto.Cipher;
 import java.io.InvalidObjectException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.security.*;
 import java.security.spec.AlgorithmParameterSpec;
@@ -12,6 +13,9 @@ import java.security.spec.AlgorithmParameterSpec;
 // leave to internal classes to implement
 @SuppressWarnings({"unused", "RedundantThrows"})
 public abstract class SecureReference<T extends Serializable> implements Serializable {
+
+	@Serial
+	private static final long serialVersionUID = -207100834605196565L;
 
 	/**
 	 * Creates a new {@link SecureReference} of the given type {@link T}.

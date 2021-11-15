@@ -1,4 +1,4 @@
-package org.broskiclan.bcutil.io.rand;
+package org.broskiclan.bcutil.digest;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +12,9 @@ public final class Salts {
 
 	/**
 	 * Generates a salt using {@link MouseInfo#getPointerInfo()} and returns
-	 * it in a byte array of the specified length.
+	 * it in a byte array of the specified length.<br>
+	 * <b>To use this method one must explicitly declare a dependency on {@link java.awt}
+	 * as it is a static dependency of this module.</b>
 	 * @param length The length of the salt to generate.
 	 * @throws HeadlessException if this method is invoked on a headless server.
 	 * @return a salt of the specified length.

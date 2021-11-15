@@ -1,5 +1,7 @@
 /**
- * This package contains cryptographic {@link java.util.Collection collections}
- * aiding in the secure storage of many objects.
+ * <h1>BCUtil {@link java.util.Collection Collections}</h1>
+ * BCUtil {@link java.util.Collection Collections} are ways to
+ * store objects with integrity and {@link org.broskiclan.bcutil.collections.Trimmable size} taken
+ * care of.
  */
 package org.broskiclan.bcutil.collections;

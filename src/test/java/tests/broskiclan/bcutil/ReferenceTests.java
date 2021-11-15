@@ -90,8 +90,8 @@ public class ReferenceTests {
 	@Test
 	public void round_trip_asymmetric_storage() {
 		System.out.println("String to store: " + "\"testString\"");
-		SecureReference<String> secureReference = new AsymmetricallySecureReference<>("testString", new SecureRandom(), 2048, "RSA", null, Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding"));
-		System.out.println("Created symmetric SecureReference with algorithm RSA and cipher RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
+		SecureReference<String> secureReference = new AsymmetricallySecureReference<>("testString", new SecureRandom(), 2048, "RSA", null, Cipher.getInstance("RSA/ECB/OAEPWithSHA3-256AndMGF1Padding"));
+		System.out.println("Created symmetric SecureReference with algorithm RSA and cipher RSA/ECB/OAEPWithSHA3-256AndMGF1Padding");
 		var k = secureReference.encrypt();
 		String kString = new String(new Hex(StandardCharsets.ISO_8859_1).encode(k.getEncoded()), StandardCharsets.ISO_8859_1);
 		System.out.println("Encrypted symmetric SecureReference and got key " + kString + "\n");
@@ -111,8 +111,8 @@ public class ReferenceTests {
 	public void round_trip_asymmetric_storage_invalid_key() {
 		try {
 			System.out.println("String to store: " + "\"testString\"");
-			SecureReference<String> secureReference = new AsymmetricallySecureReference<>("testString", new SecureRandom(), 2048, "RSA", null, Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding"));
-			System.out.println("Created symmetric SecureReference with algorithm RSA and cipher RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
+			SecureReference<String> secureReference = new AsymmetricallySecureReference<>("testString", new SecureRandom(), 2048, "RSA", null, Cipher.getInstance("RSA/ECB/OAEPWithSHA3-256AndMGF1Padding"));
+			System.out.println("Created symmetric SecureReference with algorithm RSA and cipher RSA/ECB/OAEPWithSHA3-256AndMGF1Padding");
 			var k = secureReference.encrypt();
 			String kString = new String(new Hex(StandardCharsets.ISO_8859_1).encode(k.getEncoded()), StandardCharsets.ISO_8859_1);
 			System.out.println("Encrypted symmetric SecureReference and got key " + kString + "\n");

@@ -22,7 +22,7 @@ import java.security.spec.ECGenParameterSpec;
  * can encrypt its data for security.
  * @param <T> The type to secure.
  */
-public class AsymmetricallySecureReference<T extends Serializable> extends SecureReference<T> implements Serializable {
+public class AsymmetricallySecureReference<T extends Serializable> extends SecureReference<T> {
 
 	private transient T temp;
 	private transient final Cipher cipher;

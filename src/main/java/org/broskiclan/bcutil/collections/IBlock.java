@@ -9,10 +9,4 @@ public interface IBlock {
 	String getHash();
 
 
-	/**
-	 * Converts to a JSON string.
-	 */
-	String toString();
-
-
 }

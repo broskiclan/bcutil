@@ -87,7 +87,6 @@ public class HashChainBenchmark {
 		for(HashChainBlock hashChainBlock : l.toBlockArray()) {
 			System.out.println("HASH: " + hashChainBlock.getHash());
 			System.out.println("DATA: " + hashChainBlock.getData());
-			System.out.println(hashChainBlock.toJson());
 			System.out.println("----------------------------------------------------");
 		}
 		Files.delete(Paths.get("hashTest"));
