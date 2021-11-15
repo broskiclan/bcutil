@@ -41,12 +41,15 @@ public final class SymmetricallySecureReference<T extends Serializable> extends 
 	 * @param spec a specification of cryptographic parameters.
 	 * @param algorithm The symmetric algorithm to use during encryption. See {@link javax.crypto.KeyGenerator#getInstance(String)}.
 	 *                  If {@code null}, the {@code AES} algorithm will be used.
+	 * @param cipher The cipher to use in encryption and decryption.
 	 * @throws InvalidAlgorithmParameterException if the parameter {@code spec} is not null and is invalid for initialization.
+	 * @throws NoSuchAlgorithmException if the given algorithm is not null and cannot be found
+	 * @throws NoSuchProviderException if the provider is not null and cannot be found
 	 * @see javax.crypto.KeyGenerator#getInstance(String)
 	 */
-	public SymmetricallySecureReference(T data, @NotNull SecureRandom random, @Nullable AlgorithmParameterSpec spec, @Nullable String algorithm, Cipher cipher)
-	throws InvalidAlgorithmParameterException, NoSuchAlgorithmException {
-		this.keyGenerator = KeyGenerator.getInstance(algorithm == null ? "AES" : algorithm);
+	public SymmetricallySecureReference(T data, @NotNull SecureRandom random, @Nullable AlgorithmParameterSpec spec, @Nullable String algorithm, @Nullable String provider, @NotNull Cipher cipher) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException {
+		if(provider != null) this.keyGenerator = KeyGenerator.getInstance(algorithm == null ? "AES" : algorithm, provider);
+		else this.keyGenerator = KeyGenerator.getInstance(algorithm == null ? "AES" : algorithm);
 		this.cipher = cipher;
 		this.current = data;
 		if(spec != null) keyGenerator.init(spec, random); else keyGenerator.init(random);
@@ -58,10 +61,13 @@ public final class SymmetricallySecureReference<T extends Serializable> extends 
 	 * @param random a {@link SecureRandom} to use when initializing.
 	 * @param keySize The key size to use.
 	 * @param algorithm The algorithm to use during encryption.
-	 * @throws NoSuchAlgorithmException if the given algorithm could not be found.
+	 * @param cipher The cipher to use in encryption and decryption.
+	 * @throws NoSuchAlgorithmException if the given algorithm is not null and cannot be found
+	 * @throws NoSuchProviderException if the provider is not null and cannot be found
 	 */
-	public SymmetricallySecureReference(T data, @NotNull SecureRandom random, int keySize, @Nullable String algorithm, Cipher cipher) throws NoSuchAlgorithmException {
-		this.keyGenerator = KeyGenerator.getInstance(algorithm == null ? "AES" : algorithm);
+	public SymmetricallySecureReference(T data, @NotNull SecureRandom random, int keySize, @Nullable String algorithm, @Nullable String provider, @NotNull Cipher cipher) throws NoSuchAlgorithmException, NoSuchProviderException {
+		if(provider != null) this.keyGenerator = KeyGenerator.getInstance(algorithm == null ? "AES" : algorithm, provider);
+		else this.keyGenerator = KeyGenerator.getInstance(algorithm == null ? "AES" : algorithm);
 		this.cipher = cipher;
 		this.current = data;
 		keyGenerator.init(keySize, random);
@@ -79,6 +85,7 @@ public final class SymmetricallySecureReference<T extends Serializable> extends 
 	 * @return the object in the reference.
 	 * @throws InvalidObjectException if an object was unable to be found when decrypting.
 	 * @throws IllegalStateException if the object has not yet been encrypted by {@link #encrypt()}
+	 * @throws InvalidKeyException if the given key is faulty.
 	 */
 	@Override
 	public T get(@NotNull Key key) throws InvalidObjectException, InvalidKeyException {
@@ -99,7 +106,7 @@ public final class SymmetricallySecureReference<T extends Serializable> extends 
 	 *
 	 * @param cipherSpec a cipher {@link AlgorithmParameterSpec} for use with
 	 *                   cipher initialization.
-	 * @return The key used to encrypt the encapsulated object.
+	 * @return A key that is able to decrypt the stored object.
 	 * @throws IllegalStateException if the stored object has already been encrypted.
 	 */
 	@SneakyThrows
@@ -116,7 +123,7 @@ public final class SymmetricallySecureReference<T extends Serializable> extends 
 
 	/**
 	 * Encrypts the stored object and stores it in a byte array.
-	 * @return The key used to encrypt the encapsulated object.
+	 * @return A key that is able to decrypt the stored object.
 	 * @throws IllegalStateException if the stored object has already been encrypted.
 	 */
 	@SneakyThrows
@@ -126,6 +133,7 @@ public final class SymmetricallySecureReference<T extends Serializable> extends 
 		Key key = keyGenerator.generateKey();
 		cipher.init(Cipher.ENCRYPT_MODE, key);
 		data = cipher.doFinal(SerializationUtils.serialize(current));
+		current = null;
 		isEncrypted = true;
 		return key;
 	}

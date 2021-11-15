@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -28,7 +29,7 @@ public class HashChainBenchmark {
 	@Before
 	public void new_hash_chain_with_20K_random_longs() {
 		var r = new Random();
-		this.chain = new HashChain<Long>(MessageDigest.getInstance("SHA3-256")) {
+		this.chain = new HashChain<>(MessageDigest.getInstance("SHA3-256")) {
 			@Override
 			public synchronized boolean validate() {
 				int index = 0;
@@ -37,14 +38,10 @@ public class HashChainBenchmark {
 					if(o != null) {
 						if(!o.inheritsHashFromNullBlock()) { // ignore 2nd prevHash if it inherits a hash from a NullHashChainBlock.
 							System.out.println("(" + index + ") GENESIS BLOCK | value " + o.getData());
-							if(!o.getPrevHash2().equals(
-									k[index - 2].getHash()
-							)) return false;
+							if(!o.getPrevHash2().equals(k[index - 2].getHash())) return false;
 						} else if(index != 0) {
 							System.out.println("(" + index + ") ORDINARY BLOCK | value " + o.getData());
-							if(!o.getPrevHash().equals(
-									k[index - 1].getHash()
-							)) return false;
+							if(!o.getPrevHash().equals(k[index - 1].getHash())) return false;
 						}
 						System.out.println("HASH: " + o.getHash());
 						System.out.println("==========================================================================================");
@@ -98,8 +95,9 @@ public class HashChainBenchmark {
 				"Loaded in " + s2.getTime(TimeUnit.MILLISECONDS) + "ms");
 	}
 
-	public void cleanUp() {
+	public void cleanUp() throws IOException {
 		chain = null;
+		Files.delete(Paths.get("hashTest"));
 		System.gc();
 	}
 

@@ -19,8 +19,10 @@ open module org.broskiclan.bcryptutils {
 	exports org.broskiclan.bcutil.collections;
 	exports org.broskiclan.bcutil.ref;
 	exports org.broskiclan.bcutil.auth;
+	exports org.broskiclan.bcutil.io.rand;
 
 	requires static lombok;
+	requires static java.desktop;
 	requires org.jetbrains.annotations;
 	requires org.apache.commons.codec;
 	requires com.google.gson;

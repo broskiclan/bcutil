@@ -19,10 +19,13 @@ public abstract class SecureReference<T extends Serializable> implements Seriali
 	 * @param random a {@link SecureRandom} to use when initializing.
 	 * @param spec a specification of cryptographic parameters.
 	 * @param algorithm The algorithm to use during encryption.
+	 * @param cipher The cipher to use in encryption and decryption.
+	 * @param provider The provider name of the internally created key generator. If null,<br>
+	 *                 {@code getInstance(...)}<br> will be used instead of <br>{@code getInstance(..., provider)}.
 	 * @throws InvalidAlgorithmParameterException if the parameter {@code spec} is not null and is invalid for initialization.
 	 * @throws NoSuchAlgorithmException if the given algorithm could not be found.
 	 */
-	public SecureReference(T data, @NotNull SecureRandom random, @Nullable AlgorithmParameterSpec spec, @Nullable String algorithm, Cipher cipher) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException {}
+	public SecureReference(T data, @NotNull SecureRandom random, @Nullable AlgorithmParameterSpec spec, @Nullable String algorithm, @Nullable String provider, @NotNull Cipher cipher) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException {}
 
 	/**
 	 * Creates a new {@link SecureReference} of the given type {@link T}.
@@ -30,9 +33,12 @@ public abstract class SecureReference<T extends Serializable> implements Seriali
 	 * @param random a {@link SecureRandom} to use when initializing.
 	 * @param keySize The key size to use.
 	 * @param algorithm The algorithm to use during encryption.
+	 * @param cipher The cipher to use in encryption and decryption.
+	 * @param provider The provider name of the internally created key generator. If null,<br>
+	 *                 {@code getInstance(...)}<br> will be used instead of <br>{@code getInstance(..., provider)}.
 	 * @throws NoSuchAlgorithmException if the given algorithm could not be found.
 	 */
-	public SecureReference(T data, @NotNull SecureRandom random, int keySize, @Nullable String algorithm, Cipher cipher) throws NoSuchAlgorithmException {}
+	public SecureReference(T data, @NotNull SecureRandom random, int keySize, @Nullable String algorithm, @Nullable String provider, @NotNull Cipher cipher) throws NoSuchAlgorithmException {}
 
 	/**
 	 * A constructor for subclasses to ease the problem of writing {@code super(...);}.
@@ -55,6 +61,7 @@ public abstract class SecureReference<T extends Serializable> implements Seriali
 	 * @return the object in the reference.
 	 * @throws InvalidObjectException if an object was unable to be found when decrypting.
 	 * @throws IllegalStateException if the object has not yet been encrypted by {@link #encrypt()}
+	 * @throws InvalidKeyException if the given key is faulty.
 	 */
 	public abstract T get(Key key) throws InvalidObjectException, InvalidKeyException;
 
@@ -62,14 +69,14 @@ public abstract class SecureReference<T extends Serializable> implements Seriali
 	 * Encrypts the stored object and stores it in a byte array.
 	 * @param cipherSpec a cipher {@link AlgorithmParameterSpec} for use with
 	 *                   cipher initialization.
-	 * @return The key used to encrypt the encapsulated object.
+	 * @return A key that is able to decrypt the stored object.
 	 * @throws IllegalStateException if the stored object has already been encrypted.
 	 */
 	public abstract Key encrypt(@Nullable AlgorithmParameterSpec cipherSpec);
 
 	/**
 	 * Encrypts the stored object and stores it in a byte array.
-	 * @return The key used to encrypt the encapsulated object.
+	 * @return A key that is able to decrypt the stored object.
 	 * @throws IllegalStateException if the stored object has already been encrypted.
 	 */
 	public abstract Key encrypt();
