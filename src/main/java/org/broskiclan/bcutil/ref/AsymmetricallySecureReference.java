@@ -3,8 +3,6 @@ package org.broskiclan.bcutil.ref;
 import com.google.gson.JsonSyntaxException;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.SerializationException;
-import org.apache.commons.lang3.SerializationUtils;
 import org.broskiclan.bcutil.internal.InternalSerializationUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +15,6 @@ import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.AlgorithmParameterSpec;
-import java.security.spec.ECGenParameterSpec;
 
 /**
  * <b>SymmetricallySecureReference</b>
@@ -108,6 +105,37 @@ public class AsymmetricallySecureReference<T extends Serializable> extends Secur
 			return InternalSerializationUtils.deserialize(new String(b, StandardCharsets.ISO_8859_1), tClass);
 		} catch(JsonSyntaxException | IllegalBlockSizeException | BadPaddingException e) {
 			var e1 = new InvalidObjectException("Unable to find object");
+			e1.initCause(e);
+			throw e1;
+		}
+	}
+
+	/**
+	 * Decrypts the securely encapsulated object stored in this {@link SecureReference} using a {@link Cipher}
+	 * that is initialized with the given {@link AlgorithmParameterSpec}.
+	 * Note that to get the same object using this method, this method <b>must</b> be called again. Thus,
+	 * <b>if possible</b>, there should <em>never</em> be a field directly referencing the object, like <br><br>
+	 * {@code private T data; // UNSAFE: Reflection}<br><br>
+	 * as this may raise security issues when accessed via {@link Class#getDeclaredField(String)}
+	 * or any other reflective way. If the above is necessary, it is best to make the
+	 * field {@code transient}.
+	 *
+	 * @param key  The key to use when decrypting the object.
+	 * @param spec The {@link AlgorithmParameterSpec} to use.
+	 * @return the object in the reference.
+	 * @throws InvalidObjectException if an object was unable to be found when decrypting.
+	 * @throws IllegalStateException  if the object has not yet been encrypted by {@link #encrypt()}
+	 * @throws InvalidKeyException    if the given key is faulty.
+	 */
+	@Override
+	public T get(Key key, AlgorithmParameterSpec spec) throws InvalidObjectException, InvalidKeyException, InvalidAlgorithmParameterException {
+		if(!isEncrypted) throw new IllegalStateException();
+		try {
+			cipher.init(Cipher.DECRYPT_MODE, key, spec);
+			byte[] result = cipher.doFinal(rawData);
+			return InternalSerializationUtils.deserialize(new String(result, StandardCharsets.ISO_8859_1), tClass);
+		} catch(JsonSyntaxException | IllegalBlockSizeException | BadPaddingException e) {
+			var e1 = new InvalidObjectException("Unable to find object during decryption");
 			e1.initCause(e);
 			throw e1;
 		}

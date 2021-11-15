@@ -7,6 +7,8 @@ import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Locale;
 
 public class DigestTests {
 
@@ -18,11 +20,11 @@ public class DigestTests {
 	public void generateSalts() {
 		var hex = new Hex(StandardCharsets.ISO_8859_1);
 		System.out.println("====================================================================================================================================================================");
-		System.out.println("       GENERATING SALTS      | CHARSET: ISO-8859-1");
+		System.out.println("       GENERATING SALTS       | CHARSET: ISO-8859-1");
 		System.out.println("====================================================================================================================================================================");
-		System.out.println("(java.awt) MouseInfo Salt    | HEX: " + hex(hex, Salts.ofMousePosition(64)));
-		System.out.println("(PROVIDED) SecureRandom Salt | HEX: " + hex(hex, Salts.ofSecureRandom(new SecureRandom(), 64)));
-		System.out.println(" (PASSED)  SecureRandom Salt | HEX: " + hex(hex, Salts.ofSecureRandom(64)));
+		System.out.println("(java.awt) MouseInfo Salt     | HEX: " + hex(hex, Salts.ofMousePosition(64)));
+		System.out.println("(PROVIDED) SecureRandom Salt  | HEX: " + hex(hex, Salts.ofSecureRandom(new SecureRandom(), 64)));
+		System.out.println(" (PASSED)  SecureRandom Salt  | HEX: " + hex(hex, Salts.ofSecureRandom(64)));
 		System.out.println("====================================================================================================================================================================");
 	}
 
@@ -31,11 +33,28 @@ public class DigestTests {
 		var hex = new Hex(StandardCharsets.ISO_8859_1);
 		var objectHashes = ObjectHashes.getInstance();
 		System.out.println("====================================================================================================================================================================");
-		System.out.println("      GENERATING HASHES      | CHARSET: ISO-8859-1");
+		System.out.println("      GENERATING HASHES       | CHARSET: ISO-8859-1");
 		System.out.println("====================================================================================================================================================================");
-		System.out.println("java.lang.Object (IDENTITY)  | HEX: " + hex(hex, objectHashes.ofIdentity(new Object())));
-		System.out.println("java.lang.String (IDENTITY)  | HEX: " + hex(hex, objectHashes.ofIdentity("nothingHereMatters")));
-		// if(objectHashes.ofIdentity("nothingHereMatters") != objectHashes.ofIdentity("agreed")) throw new AssertionError("Identity must match");
+		System.out.println("java.lang.Object  (IDENTITY)  | HEX: " + hex(hex, objectHashes.ofIdentity(new Object())));
+		System.out.println("java.lang.String  (IDENTITY)  | HEX: " + hex(hex, objectHashes.ofIdentity("nothingHereMatters")));
+		System.out.println("java.lang.String   (OBJECT)   | HEX: " + hex(hex, objectHashes.ofObject("nothingHereMatters")));
+		System.out.println("java.lang.String (SERIALIZED) | HEX: " + hex(hex, objectHashes.ofSerializable("nothingHereMatters")));
+		System.out.println("====================================================================================================================================================================");
+	}
+
+	@SuppressWarnings("EqualsWithItself")
+	@Test
+	public void compareSemanticObjectHashes() {
+		var objectHashes = ObjectHashes.getInstance();
+		System.out.println("====================================================================================================================================================================");
+		System.out.println("                             COMPARING HASHES                             | CHARSET: ISO-8859-1 | PROCEDURE: ofObject()");
+		System.out.println("====================================================================================================================================================================");
+		System.out.println("Arrays.equals(objectHashes.ofObject(\"yes\"), objectHashes.ofObject(\"yes\")) | RESULT: " +
+				Arrays.equals(objectHashes.ofObject("yes"), objectHashes.ofObject("yes"))
+		);
+		System.out.println("Arrays.equals(objectHashes.ofObject(\"yay\"), objectHashes.ofObject(\"nay\")) | RESULT: " +
+				Arrays.equals(objectHashes.ofObject("yay"), objectHashes.ofObject("nay"))
+		);
 		System.out.println("====================================================================================================================================================================");
 	}
 

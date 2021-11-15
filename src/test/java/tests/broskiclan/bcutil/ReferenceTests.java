@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
+import javax.crypto.spec.GCMParameterSpec;
 import java.io.InvalidObjectException;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPairGenerator;
@@ -20,12 +21,18 @@ import java.security.Security;
 public class ReferenceTests {
 
 	//=================================================================
-	// REGISTRATION OF BouncyCastle PROVIDER
+	// REGISTRATION OF BouncyCastle PROVIDER AND OTHER FIELDS
 	//=================================================================
+
+	private static GCMParameterSpec spec;
 
 	@Before
 	public void setup() {
 		Security.addProvider(new BouncyCastleProvider());
+		byte[] iv = new byte[16];
+		new SecureRandom().nextBytes(iv);
+		spec = new GCMParameterSpec(128, iv);
+
 	}
 
 	//=================================================================
@@ -37,8 +44,8 @@ public class ReferenceTests {
 	public void round_trip_symmetric_storage() {
 		System.out.println("String to store: " + "\"testString\"");
 		@SuppressWarnings("scwbasic-protection-set_DataProtection-CryptographyAvoidcryptographicweaknessUsestrongsymmetriccryptographicalgorithm")
-		SecureReference<String> secureReference = new SymmetricallySecureReference<>("testString", new SecureRandom(), 256, "AES", null, Cipher.getInstance("AES"));
-		System.out.println("Created symmetric SecureReference with algorithm AES and cipher AES");
+		SecureReference<String> secureReference = new SymmetricallySecureReference<>("testString", new SecureRandom(), 256, "AES", null, Cipher.getInstance("AES/GCM/PKCS5Padding"));
+		System.out.println("Created symmetric SecureReference with algorithm AES and cipher AES/GCM/PKCS5Padding");
 		var k = secureReference.encrypt();
 		String kString = new String(new Hex(StandardCharsets.ISO_8859_1).encode(k.getEncoded()), StandardCharsets.ISO_8859_1);
 		System.out.println("Encrypted symmetric SecureReference and got key " + kString + "\n");
@@ -58,8 +65,8 @@ public class ReferenceTests {
 	public void round_trip_symmetric_storage_invalid_key() {
 		System.out.println("String to store: " + "\"testString\"");
 		@SuppressWarnings("scwbasic-protection-set_DataProtection-CryptographyAvoidcryptographicweaknessUsestrongsymmetriccryptographicalgorithm")
-		SecureReference<String> secureReference = new SymmetricallySecureReference<>("testString", new SecureRandom(), 256, "AES", null, Cipher.getInstance("AES"));
-		System.out.println("Created symmetric SecureReference with algorithm AES and cipher AES");
+		SecureReference<String> secureReference = new SymmetricallySecureReference<>("testString", new SecureRandom(), 256, "AES", null, Cipher.getInstance("AES/GCM/PKCS5Padding"));
+		System.out.println("Created symmetric SecureReference with algorithm AES and cipher AES/GCM/PKCS5Padding");
 		secureReference.encrypt();
 		var gen = KeyGenerator.getInstance("AES");
 		gen.init(256, new SecureRandom());

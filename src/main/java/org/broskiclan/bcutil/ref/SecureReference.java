@@ -70,6 +70,24 @@ public abstract class SecureReference<T extends Serializable> implements Seriali
 	public abstract T get(Key key) throws InvalidObjectException, InvalidKeyException;
 
 	/**
+	 * Decrypts the securely encapsulated object stored in this {@link SecureReference} using a {@link Cipher}
+	 * that is initialized with the given {@link AlgorithmParameterSpec}.
+	 * Note that to get the same object using this method, this method <b>must</b> be called again. Thus,
+	 * <b>if possible</b>, there should <em>never</em> be a field directly referencing the object, like <br><br>
+	 * {@code private T data; // UNSAFE: Reflection}<br><br>
+	 * as this may raise security issues when accessed via {@link Class#getDeclaredField(String)}
+	 * or any other reflective way. If the above is necessary, it is best to make the
+	 * field {@code transient}.
+	 * @param key The key to use when decrypting the object.
+	 * @param spec The {@link AlgorithmParameterSpec} to use.
+	 * @return the object in the reference.
+	 * @throws InvalidObjectException if an object was unable to be found when decrypting.
+	 * @throws IllegalStateException if the object has not yet been encrypted by {@link #encrypt()}
+	 * @throws InvalidKeyException if the given key is faulty.
+	 */
+	public abstract T get(Key key, AlgorithmParameterSpec spec) throws InvalidObjectException, InvalidKeyException, InvalidAlgorithmParameterException;
+
+	/**
 	 * Encrypts the stored object and stores it in a byte array.
 	 * @param cipherSpec a cipher {@link AlgorithmParameterSpec} for use with
 	 *                   cipher initialization.

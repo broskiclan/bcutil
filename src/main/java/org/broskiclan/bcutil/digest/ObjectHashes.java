@@ -79,7 +79,8 @@ public final class ObjectHashes {
 	@Contract(pure = true)
 	public <T> byte[] ofObject(@NotNull T object) {
 		byte[] identity = ofIdentity(object);
-		byte[] data = SerializationUtils.serialize(new SerializableWrapper<>(object));
+		byte[] hashCode = new byte[] {(byte) object.hashCode()};
+		byte[] data = ArrayUtils.addAll(SerializationUtils.serialize(new SerializableWrapper<>(object).getSerializableObjects()), hashCode);
 		return digest.digest(ArrayUtils.addAll(identity, data));
 	}
 
