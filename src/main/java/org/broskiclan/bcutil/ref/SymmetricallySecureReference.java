@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.SerializationException;
 import org.apache.commons.lang3.SerializationUtils;
+import org.broskiclan.bcutil.internal.InternalSerializationUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,6 +31,7 @@ public final class SymmetricallySecureReference<T extends Serializable> extends 
 	private transient final KeyGenerator keyGenerator;
 	private transient final Cipher cipher;
 	private transient T current; // do not serialize unsecure objects
+	private final Class<T> tClass;
 	@ApiStatus.Internal
 	private byte[] data; // encrypted, permit serialization
 	@Getter private boolean isEncrypted = false;
@@ -47,12 +49,14 @@ public final class SymmetricallySecureReference<T extends Serializable> extends 
 	 * @throws NoSuchProviderException if the provider is not null and cannot be found
 	 * @see javax.crypto.KeyGenerator#getInstance(String)
 	 */
+	@SuppressWarnings("unchecked")
 	public SymmetricallySecureReference(T data, @NotNull SecureRandom random, @Nullable AlgorithmParameterSpec spec, @Nullable String algorithm, @Nullable String provider, @NotNull Cipher cipher) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException {
 		if(provider != null) this.keyGenerator = KeyGenerator.getInstance(algorithm == null ? "AES" : algorithm, provider);
 		else this.keyGenerator = KeyGenerator.getInstance(algorithm == null ? "AES" : algorithm);
 		this.cipher = cipher;
 		this.current = data;
 		if(spec != null) keyGenerator.init(spec, random); else keyGenerator.init(random);
+		tClass = (Class<T>) data.getClass();
 	}
 
 	/**
@@ -65,12 +69,14 @@ public final class SymmetricallySecureReference<T extends Serializable> extends 
 	 * @throws NoSuchAlgorithmException if the given algorithm is not null and cannot be found
 	 * @throws NoSuchProviderException if the provider is not null and cannot be found
 	 */
+	@SuppressWarnings("unchecked")
 	public SymmetricallySecureReference(T data, @NotNull SecureRandom random, int keySize, @Nullable String algorithm, @Nullable String provider, @NotNull Cipher cipher) throws NoSuchAlgorithmException, NoSuchProviderException {
 		if(provider != null) this.keyGenerator = KeyGenerator.getInstance(algorithm == null ? "AES" : algorithm, provider);
 		else this.keyGenerator = KeyGenerator.getInstance(algorithm == null ? "AES" : algorithm);
 		this.cipher = cipher;
 		this.current = data;
 		keyGenerator.init(keySize, random);
+		tClass = (Class<T>) data.getClass();
 	}
 
 	/**
@@ -93,7 +99,7 @@ public final class SymmetricallySecureReference<T extends Serializable> extends 
 		try {
 			cipher.init(Cipher.DECRYPT_MODE, key);
 			byte[] result = cipher.doFinal(data);
-			return SerializationUtils.deserialize(result);
+			return InternalSerializationUtils.deserialize(result, tClass);
 		} catch(SerializationException | IllegalBlockSizeException | BadPaddingException e) {
 			var e1 = new InvalidObjectException("Unable to find object during decryption");
 			e1.initCause(e);

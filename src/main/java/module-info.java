@@ -22,5 +22,6 @@ module org.broskiclan.bcryptutils {
 	requires org.jetbrains.annotations;
 	requires org.apache.commons.codec;
 	requires org.apache.commons.lang3;
+	requires org.apache.commons.io;
 
 }

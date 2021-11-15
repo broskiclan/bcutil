@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.SerializationException;
 import org.apache.commons.lang3.SerializationUtils;
+import org.broskiclan.bcutil.internal.InternalSerializationUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,6 +28,7 @@ public class AsymmetricallySecureReference<T extends Serializable> extends Secur
 	private transient T temp;
 	private transient final Cipher cipher;
 	private transient final KeyPairGenerator keyPairGenerator;
+	private final Class<T> tClass;
 	@Getter private boolean isEncrypted = false;
 	@Getter private byte[] rawData;
 
@@ -43,7 +45,7 @@ public class AsymmetricallySecureReference<T extends Serializable> extends Secur
 	 * @throws NoSuchAlgorithmException           if the given algorithm could not be found.
 	 * @throws NoSuchProviderException if the provider is not null and cannot be found
 	 */
-	@SuppressWarnings("scwbasic-protection-set_DataProtection-CryptographyAvoidcryptographicweaknessUsesufficientlylongkeysizeskeyPairGeneratorbadvalue")
+	@SuppressWarnings({"scwbasic-protection-set_DataProtection-CryptographyAvoidcryptographicweaknessUsesufficientlylongkeysizeskeyPairGeneratorbadvalue", "unchecked"})
 	public AsymmetricallySecureReference(T data, @NotNull SecureRandom random, @Nullable AlgorithmParameterSpec spec, @Nullable String algorithm, @Nullable String provider, @NotNull Cipher cipher) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException {
 		this.temp = data;
 		this.cipher = cipher;
@@ -54,6 +56,7 @@ public class AsymmetricallySecureReference<T extends Serializable> extends Secur
 			// we can set a smaller key-size (256 bits) instead of RSA's 2048 bits
 			keyPairGenerator.initialize(256, random);
 		} else keyPairGenerator.initialize(spec, random);
+		tClass = (Class<T>) data.getClass();
 	}
 
 	/**
@@ -68,12 +71,14 @@ public class AsymmetricallySecureReference<T extends Serializable> extends Secur
 	 * @throws NoSuchAlgorithmException if the given algorithm could not be found.
 	 * @throws NoSuchProviderException if the provider is not null and cannot be found
 	 */
+	@SuppressWarnings("unchecked")
 	public AsymmetricallySecureReference(T data, @NotNull SecureRandom random, int keySize, @Nullable String algorithm, @Nullable String provider, @NotNull Cipher cipher) throws NoSuchAlgorithmException, NoSuchProviderException {
 		this.temp = data;
 		this.cipher = cipher;
 		if(provider != null) this.keyPairGenerator = KeyPairGenerator.getInstance(algorithm != null ? algorithm : "EC", provider);
 		else this.keyPairGenerator = KeyPairGenerator.getInstance(algorithm != null ? algorithm : "EC");
 		keyPairGenerator.initialize(keySize, random);
+		tClass = (Class<T>) data.getClass();
 	}
 
 	/**
@@ -98,7 +103,7 @@ public class AsymmetricallySecureReference<T extends Serializable> extends Secur
 			if(!isEncrypted) throw new IllegalStateException();
 			cipher.init(Cipher.DECRYPT_MODE, key);
 			byte[] b = cipher.doFinal(rawData);
-			return SerializationUtils.deserialize(b);
+			return InternalSerializationUtils.deserialize(b, tClass);
 		} catch(SerializationException | IllegalBlockSizeException | BadPaddingException e) {
 			var e1 = new InvalidObjectException("Unable to find object");
 			e1.initCause(e);
