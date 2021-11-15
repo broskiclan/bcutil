@@ -10,6 +10,13 @@ import java.io.Serializable;
 import java.security.*;
 import java.security.spec.AlgorithmParameterSpec;
 
+/**
+ * <b>SecureReference</b>
+ * The base class of SecureReferences. This is functionally
+ * equivalent to {@link javax.crypto.SealedObject}, but with
+ * more flexibility and security.
+ * @param <T> The type to secure.
+ */
 // leave to internal classes to implement
 @SuppressWarnings({"unused", "RedundantThrows"})
 public abstract class SecureReference<T extends Serializable> implements Serializable {
