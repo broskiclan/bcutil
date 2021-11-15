@@ -1,4 +1,4 @@
-package org.broskiclan.bcutil.net.auth;
+package org.broskiclan.bcutil.auth;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.SerializationUtils;
@@ -17,7 +17,7 @@ public final class Credentials {
 	 *               it is best to use secure hashes. Examples include (but are not limited to)
 	 *               {@code SHA-256}, {@code SHA-512}, {@code SHA3-512}.
 	 * @param requester The requester to use.
-	 * @param fields
+	 * @param fields The fields to use.
 	 */
 	@Contract(pure = true)
 	public Credentials(@NotNull MessageDigest digest, @NotNull String requester, Serializable @NotNull ... fields) {

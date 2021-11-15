@@ -17,12 +17,13 @@
 open module org.broskiclan.bcryptutils {
 
 	exports org.broskiclan.bcutil.collections;
+	exports org.broskiclan.bcutil.ref;
+	exports org.broskiclan.bcutil.auth;
 
 	requires static lombok;
 	requires org.jetbrains.annotations;
 	requires org.apache.commons.codec;
 	requires com.google.gson;
 	requires org.apache.commons.lang3;
-	requires org.apache.commons.io;
 
 }

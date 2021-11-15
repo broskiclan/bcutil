@@ -54,7 +54,7 @@ public class HashChainBenchmark {
 				return true;
 			}
 		};
-		for(int i = 0; i < 10000; i++) {
+		for(int i = 1; i < 10000; i++) {
 			chain.add(r.nextLong());
 		}
 	}
@@ -72,11 +72,30 @@ public class HashChainBenchmark {
 				"    Note that this is the approximate timing");
 	}
 
+	@SneakyThrows
 	@Test
-	public void store_and_read_hash_chain_in_file() throws IOException, NoSuchAlgorithmException, ClassNotFoundException {
+	public void store_and_read_hash_chain_in_file() {
 		System.out.println("Storing HashChain in hashTest");
+		var s = new StopWatch();
+		s.start();
 		HashChains.storeChain(chain, Paths.get("hashTest").toFile(), false);
-		HashChains.readChain(Paths.get("hashTest").toFile());
+		s.stop();
+		var s2 = new StopWatch();
+		s2.start();
+		HashChain<Long> l = HashChains.readChain(Paths.get("hashTest").toFile());
+		s2.stop();
+		System.out.println("ELEMENTS FOUND: " + l.size());
+		Thread.sleep(1000);
+		System.out.println("----------------------------------------------------");
+		for(HashChainBlock hashChainBlock : l.toBlockArray()) {
+			System.out.println("HASH: " + hashChainBlock.getHash());
+			System.out.println("DATA: " + hashChainBlock.getData());
+			System.out.println(hashChainBlock.toJson());
+			System.out.println("----------------------------------------------------");
+		}
+		System.out.println("Benchmarks completed ======================\n" +
+				"Stored in " + s.getTime(TimeUnit.MILLISECONDS) + "ms" + "\n" +
+				"Loaded in " + s2.getTime(TimeUnit.MILLISECONDS) + "ms");
 	}
 
 	public void cleanUp() {
