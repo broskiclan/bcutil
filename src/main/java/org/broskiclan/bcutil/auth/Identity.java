@@ -269,10 +269,22 @@ public class Identity implements Serializable {
 		}
 	}
 
+	/**
+	 * Regenerate the key-pair of this Identity.
+	 */
 	public void regenerateKeys() {
 		keyPair = keyPairGenerator.generateKeyPair();
 	}
 
+	/**
+	 * Returns whether a <em>message</em> given in the form of a
+	 * byte array has been signed by the given {@link Identity}.
+	 * @param message The <em>message</em> to verify signature of.
+	 * @param identity The identity suspected to have signed the given <em>message</em>.
+	 * @param cipher1Spec The {@link AlgorithmParameterSpec} to use with the {@link Cipher} in {@link Cipher#UNWRAP_MODE}.
+	 * @param cipher2spec The {@link AlgorithmParameterSpec} to use with the {@link Cipher} in {@link Cipher#DECRYPT_MODE}.
+	 * @return whether the suspected identity has signed the given <em>message</em>.
+	 */
 	@SuppressWarnings("unchecked")
 	@Contract(pure = true)
 	@SneakyThrows

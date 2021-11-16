@@ -26,7 +26,7 @@ import java.util.*;
  * This class is similar to a {@link Queue}, which uses the FIFO approach.
  * @param <E> The type to store.
  */
-public class HashChain<E> implements
+public class HashChain<E> extends AbstractCollection<E> implements
 						  Cloneable,
 						  Serializable,
 						  Trimmable<HashChain<E>> {
@@ -253,6 +253,16 @@ public class HashChain<E> implements
 		} catch(Exception ignore) {
 			return false;
 		}
+	}
+
+	/**
+	 * Returns an iterator over the elements contained in this collection.
+	 *
+	 * @return an iterator over the elements contained in this collection
+	 */
+	@Override
+	public Iterator<E> iterator() {
+		return Arrays.stream(toArray()).iterator();
 	}
 
 	public int size() {
