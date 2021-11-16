@@ -16,7 +16,10 @@ import java.lang.reflect.Type;
  */
 public final class InternalSerializationUtils {
 
-	private static final Gson gson = new GsonBuilder().registerTypeHierarchyAdapter(byte[].class, new ByteArraySerializationAdapter()).create();
+	private static final Gson gson = new GsonBuilder()
+			.registerTypeHierarchyAdapter(byte[].class, new ByteArraySerializationAdapter())
+			.generateNonExecutableJson()
+			.create();
 
 	/**
 	 * Deserializes an object from JSON.

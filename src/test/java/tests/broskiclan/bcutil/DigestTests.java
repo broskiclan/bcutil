@@ -33,12 +33,18 @@ public class DigestTests {
 		var hex = new Hex(StandardCharsets.ISO_8859_1);
 		var objectHashes = ObjectHashes.getInstance();
 		System.out.println("====================================================================================================================================================================");
-		System.out.println("      GENERATING HASHES       | CHARSET: ISO-8859-1");
+		System.out.println("      GENERATING HASHES           | CHARSET: ISO-8859-1");
 		System.out.println("====================================================================================================================================================================");
-		System.out.println("java.lang.Object  (IDENTITY)  | HEX: " + hex(hex, objectHashes.ofIdentity(new Object())));
-		System.out.println("java.lang.String  (IDENTITY)  | HEX: " + hex(hex, objectHashes.ofIdentity("nothingHereMatters")));
-		System.out.println("java.lang.String   (OBJECT)   | HEX: " + hex(hex, objectHashes.ofObject("nothingHereMatters")));
-		System.out.println("java.lang.String (SERIALIZED) | HEX: " + hex(hex, objectHashes.ofSerializable("nothingHereMatters")));
+		System.out.println("java.lang.    Object  (IDENTITY)  | HEX: " + hex(hex, objectHashes.ofIdentity(new Object())));
+		System.out.println("(VARIATION 1) String  (IDENTITY)  | HEX: " + hex(hex, objectHashes.ofIdentity("nothingHereMatters")));
+		System.out.println("(VARIATION 1) String   (OBJECT)   | HEX: " + hex(hex, objectHashes.ofObject("nothingHereMatters")));
+		System.out.println("(VARIATION 1) String (SERIALIZED) | HEX: " + hex(hex, objectHashes.ofSerializable("nothingHereMatters")));
+		System.out.println("(VARIATION 2) String  (IDENTITY)  | HEX: " + hex(hex, objectHashes.ofIdentity("iThinkItDoes")));
+		System.out.println("(VARIATION 2) String   (OBJECT)   | HEX: " + hex(hex, objectHashes.ofObject("iThinkItDoes")));
+		System.out.println("(VARIATION 2) String (SERIALIZED) | HEX: " + hex(hex, objectHashes.ofSerializable("iThinkItDoes")));
+		System.out.println("====================================================================================================================================================================");
+		System.out.println("General Expectations:\n" +
+				"(IDENTITY) Objects of the same type, have the same hash");
 		System.out.println("====================================================================================================================================================================");
 	}
 

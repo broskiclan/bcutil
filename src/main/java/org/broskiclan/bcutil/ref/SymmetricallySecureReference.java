@@ -100,6 +100,7 @@ public final class SymmetricallySecureReference<T extends Serializable> extends 
 		try {
 			cipher.init(Cipher.DECRYPT_MODE, key);
 			byte[] result = cipher.doFinal(data);
+			var res = new String(result, StandardCharsets.ISO_8859_1);
 			return InternalSerializationUtils.deserialize(new String(result, StandardCharsets.ISO_8859_1), tClass);
 		} catch(JsonSyntaxException | IllegalBlockSizeException | BadPaddingException e) {
 			var e1 = new InvalidObjectException("Unable to find object during decryption");
@@ -154,7 +155,7 @@ public final class SymmetricallySecureReference<T extends Serializable> extends 
 		Key key = keyGenerator.generateKey();
 		if(cipherSpec != null) cipher.init(Cipher.ENCRYPT_MODE, key, cipherSpec);
 		else cipher.init(Cipher.ENCRYPT_MODE, key);
-		data = cipher.doFinal(SerializationUtils.serialize(current));
+		data = cipher.doFinal(InternalSerializationUtils.serialize(current).getBytes(StandardCharsets.ISO_8859_1));
 		isEncrypted = true;
 		return key;
 	}
@@ -170,7 +171,7 @@ public final class SymmetricallySecureReference<T extends Serializable> extends 
 		if(current == null) throw new IllegalStateException();
 		Key key = keyGenerator.generateKey();
 		cipher.init(Cipher.ENCRYPT_MODE, key);
-		data = cipher.doFinal(SerializationUtils.serialize(current));
+		data = cipher.doFinal(InternalSerializationUtils.serialize(current).getBytes(StandardCharsets.ISO_8859_1));
 		current = null;
 		isEncrypted = true;
 		return key;

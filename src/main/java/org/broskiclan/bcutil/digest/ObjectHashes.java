@@ -84,7 +84,7 @@ public final class ObjectHashes {
 	@Contract(pure = true)
 	public <T> byte[] ofObject(@NotNull T object) {
 		byte[] identity = ofIdentity(object);
-		byte[] hashCode = new byte[] {(byte) object.hashCode()};
+		byte[] hashCode = new byte[] {(byte) object.hashCode()}; // getting raw value triggers an InaccessibleObjectException
 		byte[] data = ArrayUtils.addAll(SerializationUtils.serialize(new SerializableWrapper<>(object).getSerializableObjects()), hashCode);
 		return digest.digest(ArrayUtils.addAll(identity, data));
 	}
