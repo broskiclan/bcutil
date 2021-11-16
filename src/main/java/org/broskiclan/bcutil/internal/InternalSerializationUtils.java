@@ -3,6 +3,7 @@ package org.broskiclan.bcutil.internal;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
@@ -24,6 +25,7 @@ public final class InternalSerializationUtils {
 	 * @return the deserialized object.
 	 */
 	@SneakyThrows
+	@Contract(pure = true)
 	public static <T> T deserialize(@NotNull String s, Class<T> clazz) {
 		return gson.fromJson(s, (Type) clazz);
 	}
@@ -35,6 +37,7 @@ public final class InternalSerializationUtils {
 	 * @return a JSON string containing the object data.
 	 */
 	@SneakyThrows
+	@Contract(pure = true)
 	public static <T> String serialize(@NotNull T t) {
 		return gson.toJson(t, t.getClass());
 	}

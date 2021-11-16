@@ -14,6 +14,11 @@ import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.util.HashSet;
 
+/**
+ * A utility class that serves as a more secure alternative
+ * and extension to {@link Object#hashCode()}.
+ */
+@SuppressWarnings("ClassCanBeRecord")
 public final class ObjectHashes {
 
 	private final MessageDigest digest;

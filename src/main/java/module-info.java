@@ -17,6 +17,10 @@ module org.broskiclan.bcryptutils {
 	exports org.broskiclan.bcutil.auth;
 	exports org.broskiclan.bcutil.digest;
 
+	exports org.broskiclan.bcutil.internal to com.google.gson;
+	opens org.broskiclan.bcutil.auth to com.google.gson;
+	opens org.broskiclan.bcutil.ref to com.google.gson;
+
 	requires static lombok;
 	requires static java.desktop;
 	requires com.google.gson;
