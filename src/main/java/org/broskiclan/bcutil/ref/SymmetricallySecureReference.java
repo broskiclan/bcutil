@@ -51,7 +51,7 @@ public final class SymmetricallySecureReference<T extends Serializable> extends 
 	 * @see javax.crypto.KeyGenerator#getInstance(String)
 	 */
 	@SuppressWarnings("unchecked")
-	public SymmetricallySecureReference(T data, @NotNull SecureRandom random, @Nullable AlgorithmParameterSpec spec, @Nullable String algorithm, @Nullable String provider, @NotNull Cipher cipher) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException {
+	public SymmetricallySecureReference(@NotNull T data, @NotNull SecureRandom random, @Nullable AlgorithmParameterSpec spec, @Nullable String algorithm, @Nullable String provider, @NotNull Cipher cipher) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException {
 		if(provider != null) this.keyGenerator = KeyGenerator.getInstance(algorithm == null ? "AES" : algorithm, provider);
 		else this.keyGenerator = KeyGenerator.getInstance(algorithm == null ? "AES" : algorithm);
 		this.cipher = cipher;
@@ -71,12 +71,26 @@ public final class SymmetricallySecureReference<T extends Serializable> extends 
 	 * @throws NoSuchProviderException if the provider is not null and cannot be found
 	 */
 	@SuppressWarnings("unchecked")
-	public SymmetricallySecureReference(T data, @NotNull SecureRandom random, int keySize, @Nullable String algorithm, @Nullable String provider, @NotNull Cipher cipher) throws NoSuchAlgorithmException, NoSuchProviderException {
+	public SymmetricallySecureReference(@NotNull T data, @NotNull SecureRandom random, int keySize, @Nullable String algorithm, @Nullable String provider, @NotNull Cipher cipher) throws NoSuchAlgorithmException, NoSuchProviderException {
 		if(provider != null) this.keyGenerator = KeyGenerator.getInstance(algorithm == null ? "AES" : algorithm, provider);
 		else this.keyGenerator = KeyGenerator.getInstance(algorithm == null ? "AES" : algorithm);
 		this.cipher = cipher;
 		this.current = data;
 		keyGenerator.init(keySize, random);
+		tClass = (Class<T>) data.getClass();
+	}
+
+	/**
+	 * Creates a new {@link SymmetricallySecureReference} of the given type {@link T}.
+	 * @param data The data to encrypt.
+	 * @param keyGenerator an initialized key generator.
+	 * @param cipher The cipher to use in encryption and decryption.
+	 */
+	@SuppressWarnings("unchecked")
+	public SymmetricallySecureReference(@NotNull T data, @NotNull KeyGenerator keyGenerator, @NotNull Cipher cipher) {
+		this.keyGenerator = keyGenerator;
+		this.cipher = cipher;
+		this.current = data;
 		tClass = (Class<T>) data.getClass();
 	}
 

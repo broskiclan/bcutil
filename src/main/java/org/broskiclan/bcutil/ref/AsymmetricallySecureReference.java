@@ -45,7 +45,7 @@ public class AsymmetricallySecureReference<T extends Serializable> extends Secur
 	 * @throws NoSuchProviderException if the provider is not null and cannot be found
 	 */
 	@SuppressWarnings({"scwbasic-protection-set_DataProtection-CryptographyAvoidcryptographicweaknessUsesufficientlylongkeysizeskeyPairGeneratorbadvalue", "unchecked"})
-	public AsymmetricallySecureReference(T data, @NotNull SecureRandom random, @Nullable AlgorithmParameterSpec spec, @Nullable String algorithm, @Nullable String provider, @NotNull Cipher cipher) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException {
+	public AsymmetricallySecureReference(@NotNull T data, @NotNull SecureRandom random, @Nullable AlgorithmParameterSpec spec, @Nullable String algorithm, @Nullable String provider, @NotNull Cipher cipher) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException {
 		this.temp = data;
 		this.cipher = cipher;
 		if(provider != null) this.keyPairGenerator = KeyPairGenerator.getInstance(algorithm != null ? algorithm : "EC", provider);
@@ -71,12 +71,27 @@ public class AsymmetricallySecureReference<T extends Serializable> extends Secur
 	 * @throws NoSuchProviderException if the provider is not null and cannot be found
 	 */
 	@SuppressWarnings("unchecked")
-	public AsymmetricallySecureReference(T data, @NotNull SecureRandom random, int keySize, @Nullable String algorithm, @Nullable String provider, @NotNull Cipher cipher) throws NoSuchAlgorithmException, NoSuchProviderException {
+	public AsymmetricallySecureReference(@NotNull T data, @NotNull SecureRandom random, int keySize, @Nullable String algorithm, @Nullable String provider, @NotNull Cipher cipher) throws NoSuchAlgorithmException, NoSuchProviderException {
 		this.temp = data;
 		this.cipher = cipher;
 		if(provider != null) this.keyPairGenerator = KeyPairGenerator.getInstance(algorithm != null ? algorithm : "EC", provider);
 		else this.keyPairGenerator = KeyPairGenerator.getInstance(algorithm != null ? algorithm : "EC");
 		keyPairGenerator.initialize(keySize, random);
+		tClass = (Class<T>) data.getClass();
+	}
+
+	/**
+	 * Creates a new {@link AsymmetricallySecureReference} of the given type {@link T}.
+	 *
+	 * @param data      The data to encrypt.
+	 * @param generator The initialized {@link KeyPairGenerator} to use
+	 * @param cipher The cipher to use in encryption and decryption.
+	 */
+	@SuppressWarnings("unchecked")
+	public AsymmetricallySecureReference(@NotNull T data, @NotNull KeyPairGenerator generator, @NotNull Cipher cipher) {
+		this.temp = data;
+		this.cipher = cipher;
+		this.keyPairGenerator = generator;
 		tClass = (Class<T>) data.getClass();
 	}
 
