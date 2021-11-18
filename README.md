@@ -19,7 +19,7 @@ BCUtil `References` are re-implementations of Java's `javax.crypto.SealedObject`
 - Support generics *(if you don't want them just set the type to `SecureReference<Object>`)*
 - [Use `Gson` serialization instead of native Java serialization](https://owasp.org/www-community/vulnerabilities/Deserialization_of_untrusted_data), just like
 every other class that relies on deserialization.
-- 
+
 ### BCUtil `Digest`
 
 BCUtil `Digest` is a package of utility classes performing non-I/O operations, such as

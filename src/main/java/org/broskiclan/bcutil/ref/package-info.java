@@ -1,5 +1,4 @@
 /**
- * <h1>BCUtil {@link org.broskiclan.bcutil.ref.SecureReference References}</h1>
  * BCUtil {@link org.broskiclan.bcutil.ref.SecureReference References} are containers for {@link java.io.Serializable serializable objects} that
  * once {@link org.broskiclan.bcutil.ref.SecureReference#encrypt() encrypted}, its internal data cannot be
  * accessed without knowing the secret/private key. As constructors of {@code References} contain

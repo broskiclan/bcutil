@@ -32,8 +32,6 @@ public class HashChainBlock implements IBlock, Serializable {
 	private static final long serialVersionUID = 4258303698233042573L;
 	/**
 	 * If a {@link HashChain} has no blocks yet, this class is to be used.
-	 * @apiNote Trying to perform digest on this (null) block will throw an {@link
-	 * IllegalAccessException}, as this block is intended to be unmodified.
 	 */
 	public static final class NullHashChainBlock extends HashChainBlock {
 

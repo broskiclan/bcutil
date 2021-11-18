@@ -12,6 +12,9 @@ import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
+/**
+ * A parameterized factory for asymmetric and symmetric references.
+ */
 public final class ReferenceFactory {
 
 	@NotNull private final SecureRandom secureRandom;

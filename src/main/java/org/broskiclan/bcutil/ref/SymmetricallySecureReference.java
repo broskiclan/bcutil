@@ -45,6 +45,7 @@ public final class SymmetricallySecureReference<T extends Serializable> extends 
 	 * @param algorithm The symmetric algorithm to use during encryption. See {@link javax.crypto.KeyGenerator#getInstance(String)}.
 	 *                  If {@code null}, the {@code AES} algorithm will be used.
 	 * @param cipher The cipher to use in encryption and decryption.
+	 * @param provider The provider to get the {@link KeyGenerator} from.
 	 * @throws InvalidAlgorithmParameterException if the parameter {@code spec} is not null and is invalid for initialization.
 	 * @throws NoSuchAlgorithmException if the given algorithm is not null and cannot be found
 	 * @throws NoSuchProviderException if the provider is not null and cannot be found
@@ -67,6 +68,7 @@ public final class SymmetricallySecureReference<T extends Serializable> extends 
 	 * @param keySize The key size to use.
 	 * @param algorithm The algorithm to use during encryption.
 	 * @param cipher The cipher to use in encryption and decryption.
+	 * @param provider The provider to get the {@link KeyGenerator} from.
 	 * @throws NoSuchAlgorithmException if the given algorithm is not null and cannot be found
 	 * @throws NoSuchProviderException if the provider is not null and cannot be found
 	 */

@@ -45,9 +45,9 @@ public class HashChain<E> extends AbstractCollection<E> implements
 	 *                  should be increased in the event of no available
 	 *                  slots to place an added element into.
 	 *
-	 * @throws IllegalArgumentException if <code>increment < 0</code> or <code>capacity < 1</code>.
+	 * @throws IllegalArgumentException if <code>increment {@literal <} 0</code> or <code>capacity {@literal <} 1</code>.
 	 *
-	 * @apiNote This class is immediately initialized with a {@link HashChainBlock.NullHashChainBlock}.
+	 * This class is immediately initialized with a {@link HashChainBlock.NullHashChainBlock}.
 	 */
 	public HashChain(int increment, MessageDigest digest) {
 		this(increment, 50, digest);
@@ -65,9 +65,9 @@ public class HashChain<E> extends AbstractCollection<E> implements
 	 * 					slots to place an added element into.
 	 *
 	 * @param capacity How many elements that the backing array can store.
-	 * @throws IllegalArgumentException if <code>increment < 0</code> or <code>capacity < 1</code>.
+	 * @throws IllegalArgumentException if <code>increment {@literal <} 0</code> or <code>capacity {@literal <} 1</code>.
 	 *
-	 * @apiNote This class is immediately initialized with a {@link HashChainBlock.NullHashChainBlock}.
+	 * This class is immediately initialized with a {@link HashChainBlock.NullHashChainBlock}.
 	 */
 	public HashChain(int increment, int capacity, MessageDigest digest) {
 
@@ -86,7 +86,7 @@ public class HashChain<E> extends AbstractCollection<E> implements
 	 * @param capacity How many elements that the backing array can store.
 	 * @param initWithNullBlock Whether the chain should be initialized with a null block. While this will affect
 	 *                          the number of elements, it will not affect the backing array's capacity.
-	 * @throws IllegalArgumentException if <code>increment < 0</code> or <code>capacity < 1</code>.
+	 * @throws IllegalArgumentException if <code>increment {@literal <} 0</code> or <code>capacity {@literal <} 1</code>.
 	 */
 	public HashChain(int increment, int capacity, boolean initWithNullBlock, MessageDigest digest) {
 		this.initWithNullBlock = initWithNullBlock;
@@ -106,7 +106,7 @@ public class HashChain<E> extends AbstractCollection<E> implements
 
 	/**
 	 * Constructs a HashChain with a capacity of 50 elements and an increment of 1.
-	 * @apiNote This class is immediately initialized with a {@link HashChainBlock.NullHashChainBlock}.
+	 * This class is immediately initialized with a {@link HashChainBlock.NullHashChainBlock}.
 	 */
 	public HashChain(MessageDigest digest) {
 		this(1, digest);
