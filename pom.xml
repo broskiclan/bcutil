@@ -20,6 +20,7 @@
 
     <scm>
         <url>https://github.com/broskiclan/bcutil.git</url>
+        <connection>https://github.com/broskiclan/bcutil.git</connection>
     </scm>
 
     <licenses>

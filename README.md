@@ -1,5 +1,7 @@
  # `BCUtil` Broski Cryptography Utilities
 
+[![Maven Central](https://img.shields.io/maven-central/v/org.broskiclan/bcutils.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22org.broskiclan%22%20AND%20a:%22bcutils%22)
+
 > Utilities for cryptographic operations.
 
 ## About
@@ -33,4 +35,20 @@ and identity.
 
 ### BCUtil `IO`
 BCUtil `IO` contains classes related to file encryption and checksums.
+
+## How to import BCUtil:
+### Maven
+
+```xml
+<dependency>
+    <groupId>org.broskiclan</groupId>
+    <artifactId>bcutils</artifactId>
+    <version>1.0</version>
+</dependency>
+```
+
+### Pure `JAR`
+
+Either download it from the releases or look `bcutils` up on Sonatype.
+
 
